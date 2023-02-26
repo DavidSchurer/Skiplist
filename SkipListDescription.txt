@@ -1,0 +1,41 @@
+Assignment 4: SkipList
+
+Create a Skip List data structure to store integers. When searching a Skip List, items can be found in
+O(log n) time. No duplicates are allowed.
+
+A SkipList can have multiple levels. SkipList of depth 1 is similar to a doubly linked list.
+All elements are inserted into a single doubly linked list.
+
+When a SkipList has multiple levels, all elements are inserted at level = 0.
+50% of those inserted at level = 0 are also inserted at level = 1. 50% of those inserted
+at level = 1 are also inserted at level 2, and so on.
+
+L4 -INF <----------------------------------> +INF
+L3 -INF <------->15<-----------------------> +INF
+     ^           ^                             ^                               
+     |           |                             |                               
+     v           v                             v                         
+L2 -INF <------->15<--------->70<----------> +INF
+     ^           ^            ^                ^    
+     |           |            |                |  
+     v           v            v                v
+L1 -INF <->10<-->15<--------->70<--->120<--> +INF
+     ^     ^     ^            ^      ^         ^
+     |     |     |            |      |         |
+     v     v     v            v      v         v
+L0 -INF <->10<-->15<--->35<-->70<--->120<--> +INF
+
+The above picture shows a SkipList with a depth of 5, Level-0 to Level-4
+
+At L0, all items are inserted: 10, 15, 35, 70, 120
+
+Some of those items will be inserted at L1, some of those items are inserted at L2, and so on.
+
+SkipList has front and rear guards, which will be INT_MIN and INT_MAX as the first and last
+items at each of the levels.
+
+SkipList is made up of several private SNode elements. Each SNode has SNode* of next, prev,
+upLevel, and downLevel, as well as data which holds the actual integer value stored at the node.
+
+Front and rear guards are a special kind of SNode* objects. The pointers to these guards are
+kept in arrays, named frontGuards and rearGuards.

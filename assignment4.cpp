@@ -209,7 +209,7 @@ void tenLevelSkipListTest() {
     cout << "After adding 9999" << endl;
     cout << largeSkipList << endl;
 
-    largeSkipList.Add(-295);
+    largeSkipList.Add (-295);
     cout << "After adding -295" << endl;
     cout << largeSkipList << endl;
 

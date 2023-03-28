@@ -17,8 +17,8 @@ SkipList::SkipList(int depth) {
 
     // Allocating memory for two arrays of SNode pointers that will represent the frontGuards and rearGuards in the SkipList
     // Each array has a max size of the depth of the SkipList
-    frontGuards = new SNode * [depth];
-    rearGuards = new SNode * [depth];
+    frontGuards = new SNode*[depth];
+    rearGuards = new SNode*[depth];
 
     // The frontGuards and rearGuards are initialized for the first level of the SkipList, their data stores the min and max values for integers
     frontGuards[0] = new SNode(INT_MIN);
@@ -27,7 +27,7 @@ SkipList::SkipList(int depth) {
     // The frontGuards and rearGuards for the first level are linked together
     frontGuards[0]->next = rearGuards[0];
     rearGuards[0]->prev = frontGuards[0];
-
+    
     // This for loop initializes all of the levels of the SkipList with each front and read guard at each level
     for (int i = 1; i < depth; i++) {
 
@@ -39,10 +39,10 @@ SkipList::SkipList(int depth) {
 
         // While the level is above 0 in the SkipList, each front and rear guard will be connected
         // to the front and rear guards above and below them
-        frontGuards[i]->downLevel = frontGuards[i - 1];
-        rearGuards[i]->downLevel = rearGuards[i - 1];
-        frontGuards[i - 1]->upLevel = frontGuards[i];
-        rearGuards[i - 1]->upLevel = rearGuards[i];
+        frontGuards[i]->downLevel = frontGuards[i-1];
+        rearGuards[i]->downLevel = rearGuards[i-1];
+        frontGuards[i-1]->upLevel = frontGuards[i];
+        rearGuards[i-1]->upLevel = rearGuards[i];
 
     }
     // The vector levels will store the SNode pointers for each level
@@ -114,7 +114,7 @@ bool SkipList::Add(int data) {
     // If the data we want to insert is already in the SkipList, update
     // the next node to contain that data and delete the new node
     if (nextNode->data == data) {
-
+        
         nextNode->data = data;
         delete newNode;
         return false; // We return false because we did not add data (no duplicates allowed)
@@ -135,7 +135,7 @@ bool SkipList::Add(int data) {
         previousNode = previousNode->upLevel;
 
         // New node is created to be inserted in the upper level
-        SNode* newUpperNode = new SNode(data);
+        SNode *newUpperNode = new SNode(data);
 
         // The new node will be inserted before the next node in the upper level
         addBefore(newUpperNode, previousNode->next);
@@ -154,9 +154,9 @@ bool SkipList::Add(int data) {
 // The remove method will start at the top of the SkipList and traverse through each level checking for the data
 // to remove, it will ensure that the data is removed at each level that it is found in the SkipList
 bool SkipList::Remove(int data) {
-
+    
     // Initialize currentNode pointer to start at the frontGuard of the top level of the SkipList
-    SNode* currentNode = frontGuards[depth - 1];
+    SNode* currentNode = frontGuards[depth-1];
 
     // Keep iterating while the currentNode is not a nullptr
     while (currentNode != nullptr) {
@@ -175,19 +175,16 @@ bool SkipList::Remove(int data) {
             }
             return true;
 
-            // If the currentNode is not at the first level and the next node's data is greater than the data to be removed, go down a level
-        }
-        else if ((currentNode->downLevel != nullptr) && (currentNode->next->data > data)) {
+        // If the currentNode is not at the first level and the next node's data is greater than the data to be removed, go down a level
+        } else if ((currentNode->downLevel != nullptr) && (currentNode->next->data > data)) {
             currentNode = currentNode->downLevel;
 
-            // If the currentNode is at the first level and the next node's data is greater than the data to be removed, then that data was not found in the SkipList
-        }
-        else if ((currentNode->downLevel == nullptr) && (currentNode->next->data > data)) {
+        // If the currentNode is at the first level and the next node's data is greater than the data to be removed, then that data was not found in the SkipList
+        } else if ((currentNode->downLevel == nullptr) && (currentNode->next->data > data)) {
             return false;
 
-            // Else the current node will keep traversing to the next node in the current level
-        }
-        else {
+        // Else the current node will keep traversing to the next node in the current level
+        } else {
             currentNode = currentNode->next;
         }
 
@@ -200,7 +197,7 @@ bool SkipList::Remove(int data) {
 bool SkipList::Contains(int data) {
 
     // Initialize currentNode pointer to start at the frontGuard of the top level of the SkipList
-    SNode* currentNode = frontGuards[depth - 1];
+    SNode* currentNode = frontGuards[depth-1];
 
     // Keep iterating while the currentNode is not a nullptr
     while (currentNode != nullptr) {
@@ -214,31 +211,28 @@ bool SkipList::Contains(int data) {
                 continue;
             }
             return true;
-
-            // If the currentNode is not at the first level and the next node's data is greater than the data we are looking for, go down a level
-        }
-        else if ((currentNode->downLevel != nullptr) && (currentNode->next->data > data)) {
+            
+        // If the currentNode is not at the first level and the next node's data is greater than the data we are looking for, go down a level
+        } else if ((currentNode->downLevel != nullptr) && (currentNode->next->data > data)) {
             currentNode = currentNode->downLevel;
 
-            // If the currentNode is at the first level and the next node's data is greater than the data we are looking for, then that data was not found in the SkipList
-        }
-        else if ((currentNode->downLevel == nullptr) && (currentNode->next->data > data)) {
+        // If the currentNode is at the first level and the next node's data is greater than the data we are looking for, then that data was not found in the SkipList
+        } else if ((currentNode->downLevel == nullptr) && (currentNode->next->data > data)) {
             return false;
 
-            // Else the current node will keep traversing to the next node in the current level
-        }
-        else {
+        // Else the current node will keep traversing to the next node in the current level
+        } else {
             currentNode = currentNode->next;
         }
 
     }
     return false;
-
+    
 }
 
 // The addBefore method inserts a new node before the nextNode at the current
 // level of the SkipList
-void SkipList::addBefore(SNode* newNode, SNode* nextNode) {
+void SkipList::addBefore(SNode *newNode, SNode *nextNode) {
 
     SNode* previousNode = nextNode->prev;
 
@@ -257,7 +251,7 @@ void SkipList::addBefore(SNode* newNode, SNode* nextNode) {
     nextNode->prev = newNode;
     // the previous node's next pointer is set to new node
     previousNode->next = newNode;
-
+    
 }
 
 // The alsoHigher method returns true 50% of the time, it uses
@@ -265,17 +259,15 @@ void SkipList::addBefore(SNode* newNode, SNode* nextNode) {
 // if the number it receives is 0
 bool SkipList::alsoHigher() const {
 
-    return (rand() % 2 == 0);
+   return (rand() % 2 == 0);
 }
 
-// The overloaded output operator for the SkipList will print out the contents of the SkipList to the
-// output stream including each depth level, front and rear guards, and the items in each level of
-// the Skiplist
-ostream& operator<<(ostream& os, const SkipList& list) {
-
+ostream &operator<<(ostream &os, const SkipList &list) {
+    
     // Loop through each level in the SkipList, starting at the top level
-    for (int i = list.depth - 1; i >= 0; i--) {
-        // Sets the current pointer to point to the next node after the frontGuard
+    for (int i = list.depth -1; i >= 0; i--) {
+        // Sets the current pointer to point to the next node after
+        // the frontGuard at the top level
         SNode* current = list.frontGuards[i]->next;
 
         // Print the level of the SkipList and the front guard's data
